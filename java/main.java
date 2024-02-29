@@ -4,10 +4,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class main {
-  public static StringBuffer reqs() {
+  public static StringBuffer pegaPrimo() {
     try {
       // URL do recurso desejado
       URL url = new URL("http://15.229.56.199/chaves");
@@ -20,27 +22,26 @@ public class main {
 
 
       if (responseCode != 200) {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getErrorStream()))) {
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-            while ((inputLine = in.readLine()) != null) {
-              response.append(inputLine);
-            }
-            System.out.println("Resposta de Erro: " + response.toString());
-
+        try (BufferedReader leitor = new BufferedReader(new InputStreamReader(connection.getErrorStream()))) {
+          String linha;
+          StringBuffer response = new StringBuffer();
+          while ((linha = leitor.readLine()) != null) {
+            response.append(linha);
+          }
+          System.out.println("Resposta de Erro: " + response.toString());
+          return response;
         } catch (IOException e) {
             e.printStackTrace();
         }
       }
       
       if (responseCode == 200) {
-        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        String inputLine;
+        BufferedReader leitor = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        String linha;
         StringBuffer response = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-          response.append(inputLine);
+        while ((linha = leitor.readLine()) != null) {
+          response.append(linha);
         }
-        in.close();
 
         System.out.println(response.toString());
         return response;
@@ -53,14 +54,24 @@ public class main {
     return null;
   }
 
-    private static char[] InputStreamReader(InputStream errorStream) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'InputStreamReader'");
-  }
+  public static void main(String[] args) {
 
-    public static void main(String[] args) {
-
-      System.out.println(reqs());
-
+    Pattern pattern = Pattern.compile("\"error_msg\":\"(.*?)\"");
+    Matcher matcher = pattern.matcher(pegaPrimo());
+    if (matcher.find()) {
+        System.out.println(matcher.group(1));
+    }
+    pattern = Pattern.compile("\"primo:\":\"(.*?)\"");
+    matcher = pattern.matcher(pegaPrimo());
+    if (matcher.find()) {
+        System.out.println(matcher.group(1));
+        String primo = matcher.group(1);
+    }
+    pattern = Pattern.compile("\"inteiro:\":\"(.*?)\"");
+    matcher = pattern.matcher(pegaPrimo());
+    if (matcher.find()) {
+        System.out.println(matcher.group(1));
+        String inteiro = matcher.group(1);
+    }
   }
 }
