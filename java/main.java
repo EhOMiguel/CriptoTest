@@ -2,8 +2,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.SecureRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,7 +30,7 @@ public class main {
           while ((linha = leitor.readLine()) != null) {
             response.append(linha);
           }
-          System.out.println("Resposta de Erro: " + response.toString());
+          // System.out.println("Resposta de Erro: " + response.toString());
           return response;
         } catch (IOException e) {
             e.printStackTrace();
@@ -43,7 +45,7 @@ public class main {
           response.append(linha);
         }
 
-        System.out.println(response.toString());
+        // System.out.println(response.toString());
         return response;
       } else {
         System.out.println("GET request not worked");
@@ -56,22 +58,39 @@ public class main {
 
   public static void main(String[] args) {
 
+    StringBuffer response = pegaPrimo();
+    System.out.println(response);
+    BigInteger inteiro = null;
+    BigInteger primo = null;
+
+    
     Pattern pattern = Pattern.compile("\"error_msg\":\"(.*?)\"");
-    Matcher matcher = pattern.matcher(pegaPrimo());
+    Matcher matcher = pattern.matcher(response);
     if (matcher.find()) {
         System.out.println(matcher.group(1));
+        return;
     }
-    pattern = Pattern.compile("\"primo:\":\"(.*?)\"");
-    matcher = pattern.matcher(pegaPrimo());
+
+
+    pattern = Pattern.compile("primo:\"(.*?)\"");
+    matcher = pattern.matcher(response);
     if (matcher.find()) {
         System.out.println(matcher.group(1));
-        String primo = matcher.group(1);
+        primo = new BigInteger(matcher.group(1));
     }
-    pattern = Pattern.compile("\"inteiro:\":\"(.*?)\"");
-    matcher = pattern.matcher(pegaPrimo());
+
+
+    pattern = Pattern.compile("inteiro:\"(.*?)\"");
+    matcher = pattern.matcher(response);
     if (matcher.find()) {
         System.out.println(matcher.group(1));
-        String inteiro = matcher.group(1);
+        inteiro = new BigInteger(matcher.group(1));
     }
+
+
+    BigInteger segredo = new BigInteger(20, new SecureRandom());
+    BigInteger alfa = inteiro.modPow(segredo, primo);
+    System.out.println(alfa);
+
   }
 }
