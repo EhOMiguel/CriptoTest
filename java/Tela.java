@@ -32,7 +32,7 @@ public class Tela {
     }
 
     public void exibir(BigInteger primo, BigInteger inteiro) {
-        labelAviso.setVisible(false); // Reinicia o estado do aviso
+        labelAviso.setVisible(false);
 
         // Reutilizando o método para adicionar componentes
         addComponent(new JLabel("Primo: " + primo + "       Inteiro: " + inteiro), 0);
