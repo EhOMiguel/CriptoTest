@@ -62,7 +62,7 @@ public class Tela {
 
 
         // Adiciona labelAviso ao frame
-        painel.gridy = 4; // Define a posição do labelAviso
+        painel.gridy = 4; // Quarta linha
         frame.add(labelAviso, painel);
 
         JButton butaumCalcular = new JButton("Calcular");
@@ -81,6 +81,7 @@ public class Tela {
                     BigInteger segredo = new BigInteger(textChavePriv.getText());
                     BigInteger alfa = inteiro.modPow(segredo, primo);
                     labelAviso.setText("Alfa: " + alfa);
+                    
                     labelAviso.setForeground(Color.green); 
                 } catch (NumberFormatException err) {
                     labelAviso.setText("Apenas números serão aceitos!");
