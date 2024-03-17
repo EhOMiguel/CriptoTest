@@ -56,8 +56,6 @@ public class ChatTela {
                 String mensagemCriptografada = criptografarCesar(message, key);
                 webSocket.sendText("mensagemA:" + mensagemCriptografada, true); // Envia a mensagem criptografada
 
-
-                webSocket.sendText(message, true);
             }
         });
 
@@ -117,6 +115,28 @@ public class ChatTela {
         }
         return mensagemCriptografada.toString();
     }
-    
 
+    public String descriptografarCesar(String mensagemCriptografada, BigInteger chave) {
+        int deslocamento = chave.mod(BigInteger.valueOf(26)).intValue();
+        StringBuilder mensagemDescriptografada = new StringBuilder();
+        for (char caracter : mensagemCriptografada.toCharArray()) {
+            if (Character.isLetter(caracter)) {
+                char base = Character.isLowerCase(caracter) ? 'a' : 'A';
+                int deslocamentoReverso = 26 - deslocamento; // Deslocamento inverso para descriptografar
+                char caracterDescriptografado = (char) ((caracter - base + deslocamentoReverso) % 26 + base);
+                mensagemDescriptografada.append(caracterDescriptografado);
+            } else {
+                mensagemDescriptografada.append(caracter); // Não modifica caracteres não alfabéticos
+            }
+        }
+        return mensagemDescriptografada.toString();
+    }
+    
+    public void appendMensagem(String mensagem) {
+        chatArea.append(mensagem + "\n");
+    }
+    
+    public BigInteger getKey() {
+        return this.key; 
+    }
 }

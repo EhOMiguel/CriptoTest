@@ -82,6 +82,7 @@ public class Tela {
     private void iniciarChat() {
         if (chatTela == null) {
             chatTela = new ChatTela(primo, inteiro, alfa, segredo, webSocket, alfaB);
+            Main.chatTela = Tela.chatTela;
         }
         frame.dispose(); // Fecha a janela atual
     }
@@ -96,7 +97,7 @@ public class Tela {
         try {
             this.segredo = new BigInteger(chavePrivadaTexto);
             this.alfa = inteiro.modPow(segredo, primo);
-            webSocket.sendText("alfaB:" + alfa.toString(), true); // Envia alfa para o servidor
+            webSocket.sendText("alfaA:" + alfa.toString(), true); // Envia alfa para o servidor
             labelAviso.setText("<html>Alfa calculado: " + alfa + "</html>");
             labelAviso.setForeground(new Color(0, 128, 0));
             labelAviso.setVisible(true);

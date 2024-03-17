@@ -67,17 +67,38 @@ public class Main {
 
                     }else if(data.toString().startsWith("mensagemB:")){
 
-                    }else{
-                        StringBuffer responseBuffer = new StringBuffer(data.toString());
-
-                        BigInteger primo = CryptoLogic.extractPrimo(responseBuffer);
-                        BigInteger inteiro = CryptoLogic.extractInt(responseBuffer);
-                        if (primo != null && inteiro != null) {
-                            SwingUtilities.invokeLater(() -> tela.atualizar(primo, inteiro));
-                        } else {
-                            System.out.println("Não foi possível extrair os números.");
+                        String mensagemCriptografada = data.toString().substring("mensagemB:".length());
+                        
+                        if (chatTela != null) {
+                            System.out.println(mensagemCriptografada);
+                            // Usa a chave para descriptografar a mensagem
+                            String mensagemDescriptografada = chatTela.descriptografarCesar(mensagemCriptografada, chatTela.getKey());
+                            System.out.println(mensagemDescriptografada);
+                            SwingUtilities.invokeLater(() -> {
+                                chatTela.appendMensagem("Stranger: " + mensagemDescriptografada);
+                            });
                         }
-                        tela.atualizar(primo, inteiro);
+
+                    }else{
+                        try {
+                            
+                            StringBuffer responseBuffer = new StringBuffer(data.toString());
+
+                            BigInteger primo = CryptoLogic.extractPrimo(responseBuffer);
+                            BigInteger inteiro = CryptoLogic.extractInt(responseBuffer);
+                            if (primo != null && inteiro != null) {
+                                SwingUtilities.invokeLater(() -> tela.atualizar(primo, inteiro));
+                            } else {
+                                System.out.println("Não foi possível extrair os números.");
+                            }
+                            tela.atualizar(primo, inteiro);
+
+                        } catch (Exception e) {
+                            System.out.println("Error");
+
+                        }
+                            
+                        
                     }
                     
                 }
