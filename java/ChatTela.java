@@ -24,7 +24,7 @@ public class ChatTela {
     }
 
     private void initializeUI() {
-        frame = new JFrame("Chat CriptoElmo");
+        frame = new JFrame("Chat CriptoElmo A");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLayout(new BorderLayout(10, 10));
@@ -53,6 +53,10 @@ public class ChatTela {
                 chatArea.append("Você: " + message + "\n"); // Adiciona a mensagem ao chat
                 messageField.setText("");// Limpa o campo de mensagem
                 
+                String mensagemCriptografada = criptografarCesar(message, key);
+                webSocket.sendText("mensagemA:" + mensagemCriptografada, true); // Envia a mensagem criptografada
+
+
                 webSocket.sendText(message, true);
             }
         });
@@ -98,4 +102,21 @@ public class ChatTela {
             System.out.println("Formato inválido recebido: " + alfaBr);
         }
     }
+
+    private String criptografarCesar(String mensagem, BigInteger chave) {
+        int deslocamento = chave.mod(BigInteger.valueOf(26)).intValue(); // Converte a chave para um deslocamento válido
+        StringBuilder mensagemCriptografada = new StringBuilder();
+        for (char caracter : mensagem.toCharArray()) {
+            if (Character.isLetter(caracter)) {
+                char base = Character.isLowerCase(caracter) ? 'a' : 'A';
+                char caracterCriptografado = (char) ((caracter - base + deslocamento) % 26 + base);
+                mensagemCriptografada.append(caracterCriptografado);
+            } else {
+                mensagemCriptografada.append(caracter); // Não encripta caracteres não alfabéticos
+            }
+        }
+        return mensagemCriptografada.toString();
+    }
+    
+
 }

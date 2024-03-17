@@ -65,7 +65,7 @@ public class Main {
                     if(data.toString().startsWith("alfaB:")) {
                         tela.habilitarIniciarChat(data.toString()); // Habilita o botão "Iniciar Chat"
 
-                    }else if(data.toString().startsWith("mensagem:")){
+                    }else if(data.toString().startsWith("mensagemB:")){
 
                     }else{
                         StringBuffer responseBuffer = new StringBuffer(data.toString());
