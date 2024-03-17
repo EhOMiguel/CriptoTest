@@ -65,7 +65,19 @@ public class Main {
                     if(data.toString().startsWith("alfaA:")) {
                         tela.habilitarIniciarChat(data.toString()); // Habilita o botão "Iniciar Chat"
 
-                    }else if(data.toString().startsWith("mensagem:")){
+                    }else if(data.toString().startsWith("mensagemA:")){
+                        
+                        String mensagemCriptografada = data.toString().substring("mensagemA:".length());
+                    
+                        if (chatTela != null) {
+                            System.out.println(mensagemCriptografada);
+                            // Usa a chave para descriptografar a mensagem
+                            String mensagemDescriptografada = chatTela.descriptografarCesar(mensagemCriptografada, chatTela.getKey());
+                            System.out.println(mensagemDescriptografada);
+                            SwingUtilities.invokeLater(() -> {
+                                chatTela.appendMensagem("Stranger: " + mensagemDescriptografada);
+                            });
+                        }
 
                     }else{
                         StringBuffer responseBuffer = new StringBuffer(data.toString());

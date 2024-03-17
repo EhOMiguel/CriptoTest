@@ -42,6 +42,12 @@ public class Tela {
         constraints.gridy = 6;
         frame.add(iniciarChatBotao, constraints);
 
+        // Configura a posição da janela no canto superior direito da tela
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = screenSize.width - frame.getWidth();
+        int y = 0; // Superior direito
+        frame.setLocation(x, y);
+
         frame.setVisible(true);
     }
 
@@ -82,6 +88,7 @@ public class Tela {
     private void iniciarChat() {
         if (chatTela == null) {
             chatTela = new ChatTela(primo, inteiro, alfa, segredo, webSocket, alfaA);
+            Main.chatTela = Tela.chatTela;
         }
         frame.dispose(); // Fecha a janela atual
     }
@@ -96,7 +103,7 @@ public class Tela {
         try {
             this.segredo = new BigInteger(chavePrivadaTexto);
             this.alfa = inteiro.modPow(segredo, primo);
-            webSocket.sendText("alfaA:" + alfa.toString(), true); // Envia alfa para o servidor
+            webSocket.sendText("alfaB:" + alfa.toString(), true); // Envia alfa para o servidor
             labelAviso.setText("<html>Alfa calculado: " + alfa + "</html>");
             labelAviso.setForeground(new Color(0, 128, 0));
             labelAviso.setVisible(true);

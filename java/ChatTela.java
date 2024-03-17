@@ -53,7 +53,8 @@ public class ChatTela {
                 chatArea.append("Você: " + message + "\n"); // Adiciona a mensagem ao chat
                 messageField.setText("");// Limpa o campo de mensagem
                 
-                webSocket.sendText(message, true);
+                String mensagemCriptografada = criptografarCesar(message, key);
+                webSocket.sendText("mensagemB:" + mensagemCriptografada, true);
             }
         });
 
@@ -68,6 +69,12 @@ public class ChatTela {
 
         frame.add(infoArea, BorderLayout.NORTH);
         frame.add(chatPanel, BorderLayout.CENTER);
+
+        // Configura a posição da janela no canto superior direito da tela
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = screenSize.width - frame.getWidth();
+        int y = 0; // Superior direito
+        frame.setLocation(x, y);
 
         frame.setVisible(true);
     }
@@ -97,5 +104,44 @@ public class ChatTela {
         } else {
             System.out.println("Formato inválido recebido: " + alfaAr);
         }
+    }
+
+    private String criptografarCesar(String mensagem, BigInteger chave) {
+        int deslocamento = chave.mod(BigInteger.valueOf(26)).intValue(); // Converte a chave para um deslocamento válido
+        StringBuilder mensagemCriptografada = new StringBuilder();
+        for (char caracter : mensagem.toCharArray()) {
+            if (Character.isLetter(caracter)) {
+                char base = Character.isLowerCase(caracter) ? 'a' : 'A';
+                char caracterCriptografado = (char) ((caracter - base + deslocamento) % 26 + base);
+                mensagemCriptografada.append(caracterCriptografado);
+            } else {
+                mensagemCriptografada.append(caracter); // Não encripta caracteres não alfabéticos
+            }
+        }
+        return mensagemCriptografada.toString();
+    }
+
+    public String descriptografarCesar(String mensagemCriptografada, BigInteger chave) {
+        int deslocamento = chave.mod(BigInteger.valueOf(26)).intValue();
+        StringBuilder mensagemDescriptografada = new StringBuilder();
+        for (char caracter : mensagemCriptografada.toCharArray()) {
+            if (Character.isLetter(caracter)) {
+                char base = Character.isLowerCase(caracter) ? 'a' : 'A';
+                int deslocamentoReverso = 26 - deslocamento; // Deslocamento inverso para descriptografar
+                char caracterDescriptografado = (char) ((caracter - base + deslocamentoReverso) % 26 + base);
+                mensagemDescriptografada.append(caracterDescriptografado);
+            } else {
+                mensagemDescriptografada.append(caracter); // Não modifica caracteres não alfabéticos
+            }
+        }
+        return mensagemDescriptografada.toString();
+    }
+    
+    public void appendMensagem(String mensagem) {
+        chatArea.append(mensagem + "\n");
+    }
+    
+    public BigInteger getKey() {
+        return this.key; 
     }
 }
