@@ -14,12 +14,12 @@ public class Tela {
     private JButton iniciarChatBotao;
     private BigInteger segredo;
     private BigInteger alfa; 
-    private String alfaB; 
+    private String alfaA; 
     private static ChatTela chatTela;
 
     public Tela(WebSocket webSocket) {
         this.webSocket = webSocket;
-        frame = new JFrame("CriptoElmo A");
+        frame = new JFrame("CriptoElmo B");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLayout(new GridBagLayout());
@@ -81,13 +81,13 @@ public class Tela {
 
     private void iniciarChat() {
         if (chatTela == null) {
-            chatTela = new ChatTela(primo, inteiro, alfa, segredo, webSocket, alfaB);
+            chatTela = new ChatTela(primo, inteiro, alfa, segredo, webSocket, alfaA);
         }
         frame.dispose(); // Fecha a janela atual
     }
 
-    public void habilitarIniciarChat(String alfaBr) {
-        this.alfaB = alfaBr;
+    public void habilitarIniciarChat(String alfaAr) {
+        this.alfaA = alfaAr;
         // this.segredo = key;
         SwingUtilities.invokeLater(() -> iniciarChatBotao.setEnabled(true));
     }
@@ -96,7 +96,7 @@ public class Tela {
         try {
             this.segredo = new BigInteger(chavePrivadaTexto);
             this.alfa = inteiro.modPow(segredo, primo);
-            webSocket.sendText("alfaB:" + alfa.toString(), true); // Envia alfa para o servidor
+            webSocket.sendText("alfaA:" + alfa.toString(), true); // Envia alfa para o servidor
             labelAviso.setText("<html>Alfa calculado: " + alfa + "</html>");
             labelAviso.setForeground(new Color(0, 128, 0));
             labelAviso.setVisible(true);

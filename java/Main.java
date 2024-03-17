@@ -62,7 +62,7 @@ public class Main {
                         System.out.println("Não foi possível extrair os números.");
                     }
                 }else{
-                    if(data.toString().startsWith("alfaB:")) {
+                    if(data.toString().startsWith("alfaA:")) {
                         tela.habilitarIniciarChat(data.toString()); // Habilita o botão "Iniciar Chat"
 
                     }else if(data.toString().startsWith("mensagem:")){
